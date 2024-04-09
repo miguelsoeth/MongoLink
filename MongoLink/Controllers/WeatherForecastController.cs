@@ -32,7 +32,18 @@ public class WeatherForecastController : ControllerBase
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-        await _weatherForecastService.CreateAsync(result);
-        return result;
+        //MUDAR CONFORME TESTE
+        //result = null;
+        
+        if (result != null)
+        {
+            await _weatherForecastService.CreateAsync(result);
+            return result;
+        }
+        else
+        {
+            WeatherForecast last = await _weatherForecastService.GetLastAsync("Mild");
+            return new WeatherForecast[] { last };
+        }
     }
 }

@@ -18,17 +18,20 @@ public class WeatherForecastService
     public async Task<List<WeatherForecast>> GetAsync() =>
         await _weatherForecastCollection.Find(x => true).ToListAsync();
     
-    public async Task<WeatherForecast> GetAsync(string id) =>
-        await _weatherForecastCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<WeatherForecast> GetAsync(DateTime date) =>
+        await _weatherForecastCollection.Find(x => x.Date == date).FirstOrDefaultAsync();
+
+    public async Task<WeatherForecast> GetLastAsync(string summary) =>
+        await _weatherForecastCollection.Find(x => x.Summary == summary).SortByDescending(x => x.Date).FirstOrDefaultAsync();
 
     public async Task CreateAsync(WeatherForecast forecast) =>
         await _weatherForecastCollection.InsertOneAsync(forecast);
     public async Task CreateAsync(WeatherForecast[] forecast) =>
         await _weatherForecastCollection.InsertManyAsync(forecast);
     
-    public async Task UpdateAsync(string id, WeatherForecast forecast) =>
-        await _weatherForecastCollection.ReplaceOneAsync(x=> x.Id == id, forecast);
+    public async Task UpdateAsync(DateTime date, WeatherForecast forecast) =>
+        await _weatherForecastCollection.ReplaceOneAsync(x=> x.Date == date, forecast);
     
-    public async Task removeAsync(string id) =>
-        await _weatherForecastCollection.DeleteOneAsync(x=> x.Id == id);
+    public async Task removeAsync(DateTime date) =>
+        await _weatherForecastCollection.DeleteOneAsync(x=> x.Date == date);
 }
